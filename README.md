@@ -1,2 +1,2 @@
 # dotnetcorewithplugins
-.NET Core application with plugins
+Examples of .NET Core applications with plugin support

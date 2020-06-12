@@ -1,0 +1,51 @@
+@page "/plugins"
+
+@inject PluginService service
+
+<h1>Plugins</h1>
+
+<div class="row">
+  <div class="col-md-9">
+        @foreach (var plugin in plugins)
+        {
+            <div class="card plugin ml-1">
+                <h5 class="card-header">
+                    @plugin.Name
+                    <button @onclick=@(() => LoadPlugin(@plugin)) class="float-right"><i class="oi oi-reload"></i></button>
+                </h5>
+                <div class="card-body plugin-body">
+                    <p class="card-text">
+                        <ul>
+                            @if (service.PluginResponses.TryGetValue(@plugin.Name, out List<string> responses))
+                            {
+                                @foreach (var response in responses)
+                                {
+                                    <li> @response</li>
+                                }
+                            }
+                        </ul>
+                    </p>
+                </div>
+            </div>
+        }
+    </div>
+ </div>
+
+
+@code {
+    int iteration = 0;
+    List<HostedPlugin> plugins = new List<HostedPlugin>();
+    
+    protected override void OnInitialized()
+    {
+        service.LoadPlugins();
+        plugins = service.Plugins;
+    }
+
+    private void LoadPlugin(HostedPlugin currentPlugin)
+    {
+        iteration++;
+        service.RunPlugin(currentPlugin, iteration.ToString());
+    }
+
+}
